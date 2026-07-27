@@ -1,5 +1,6 @@
 import httpx
 import xmltodict
+import collections.abc
 import os
 from dotenv import load_dotenv
 
@@ -23,7 +24,9 @@ async def search_word(word: str):
     result = []
     for item in items:
         if item["word"] == word:
-            for sense in item["sense"]:
+            trans = item["sense"] if isinstance(item["sense"], collections.abc.Sequence) else [item["sense"]]
+            for sense in trans:
+
                 if "translation" in sense:
                     result.append({
                         "translation": sense["translation"]["trans_word"],
