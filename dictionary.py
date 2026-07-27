@@ -16,15 +16,17 @@ async def search_word(word: str):
     }
     async with httpx.AsyncClient() as client:
         response = await client.get(url, params=params)
-    data = xmltodict.parse(response.text)
+    data = xmltodict.parse(response.content)
 
     items = data["channel"]["item"]
 
     result = []
     for item in items:
         if item["word"] == word:
-            result.append({
-                "translation": item["sense"]["translation"]["trans_word"],
-                "definition": item["sense"]["translation"]["trans_dfn"]
-            })
+            for sense in item["sense"]:
+                if "translation" in sense:
+                    result.append({
+                        "translation": sense["translation"]["trans_word"],
+                        "definition": sense["translation"]["trans_dfn"]
+                    })
     return result
