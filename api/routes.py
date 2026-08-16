@@ -21,16 +21,21 @@ async def get_word_card(
 
     word_data = response.data[0]
 
-    return WordCardResponse(
-        id=word_data["id"],
-        word=word_data["word"],
-        pos=word_data.get("pos"),
-        level=word_data.get("level"),
-        definition_kr=word_data.get("definition_kr"),
-        definition_ru=word_data.get("definition_ru"),
-        examples=word_data.get("examples", []),
-    )
+    return WordCardResponse(**word_data)
 
+
+@router.get("/card/{vocab_word}", response_model=WordCardResponse)
+async def get_word_card(
+    vocab_word: str, user: dict = Depends(get_current_user), db: Client = Depends(get_db)
+):
+    response = db.table("vocabulary").select("*").eq("word", vocab_word).execute()
+
+    if not response.data:
+        raise HTTPException(status_code=404, detail="Word not found in database")
+
+    word_data = response.data[0]
+
+    return WordCardResponse(**word_data)
 
 @router.put("/progress", summary="Обновить прогресс")
 async def update_progress(

@@ -13,12 +13,13 @@ class AuthResponse(BaseModel):
 
 class WordCardResponse(BaseModel):
     id: int
+    id_lvl: int
+    level: str
     word: str
-    pos: Optional[str]
-    level: Optional[str]
-    definition_kr: Optional[str]
-    definition_ru: Optional[str]
-    examples: List[Dict[str, Any]]
+    type: str
+    example: str
+    grade_type: str
+    grade_id: str
 
 
 class ProgressUpdateRequest(BaseModel):
