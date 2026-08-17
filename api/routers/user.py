@@ -3,8 +3,8 @@ from supabase import Client
 from models.schemas import ProgressUpdateRequest
 from api.dependencies import get_current_user, get_current_user, get_db
 
-
 router = APIRouter(prefix="/user", tags=["User API"])
+
 
 @router.put("/progress", summary="Обновить прогресс")
 async def update_progress(

@@ -25,3 +25,11 @@ class WordCardResponse(BaseModel):
 class ProgressUpdateRequest(BaseModel):
     vocab_id: int
     status: str  # 'learning', 'mastered'
+
+
+class PaginatedWordsResponse(BaseModel):
+    items: List[WordCardResponse]
+    total: int
+    page: int
+    limit: int
+    total_pages: int
