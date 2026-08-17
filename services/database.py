@@ -10,12 +10,3 @@ def init_supabase() -> Client:
 
 
 supabase_client: Client = init_supabase()
-
-
-def get_word():
-    response = supabase_client.table("words").select("*").limit(1).execute()
-
-    if not response.data:
-        return None
-
-    return response.data[0]
