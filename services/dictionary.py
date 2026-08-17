@@ -1,16 +1,14 @@
 import httpx
 import xmltodict
 import collections.abc
-import os
-from dotenv import load_dotenv
 
-load_dotenv() 
-KRDICT_API_KEY = os.getenv("KRDICT_API_KEY")
+from core.config import settings
+
 
 async def search_word(word: str):
     url = f"https://krdict.korean.go.kr/api/search"
     params = {
-        "key": KRDICT_API_KEY,
+        "key": settings.KRDICT_API_KEY,
         "q": word,
         "translated": "y",
         "trans_lang": "10",
@@ -24,12 +22,18 @@ async def search_word(word: str):
     result = []
     for item in items:
         if item["word"] == word:
-            trans = item["sense"] if isinstance(item["sense"], collections.abc.Sequence) else [item["sense"]]
+            trans = (
+                item["sense"]
+                if isinstance(item["sense"], collections.abc.Sequence)
+                else [item["sense"]]
+            )
             for sense in trans:
 
                 if "translation" in sense:
-                    result.append({
-                        "translation": sense["translation"]["trans_word"],
-                        "definition": sense["translation"]["trans_dfn"]
-                    })
+                    result.append(
+                        {
+                            "translation": sense["translation"]["trans_word"],
+                            "definition": sense["translation"]["trans_dfn"],
+                        }
+                    )
     return result
